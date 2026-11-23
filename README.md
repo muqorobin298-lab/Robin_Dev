@@ -3,10 +3,10 @@
 Lagi semangat belajar dan bikin project di GitHub.
 
 ## 🛠️ Yang lagi aku pelajari
-- HTML, CSS, JavaScript,All Server
+- HTML, CSS, JavaScript
 
 ## 🚀 Project
-- Segera hadir!
+- [Robin_Dev](https://github.com/muqorobin298-lab/Robin_Dev)
 
 ## 📫 Kontak
 - Email: muqorobin298@gmail.com
