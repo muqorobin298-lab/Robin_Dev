@@ -6,9 +6,9 @@ Lagi semangat belajar dan bikin project di GitHub.
 - HTML, CSS, JavaScript
 
 ## 🚀 Project
-- [Robin_Dev](https://github.com/muqorobin298-lab/Robin_Dev)
+- [Robin_Dev].https://muqorobin298-lab.github.io/Robin_Dev/
 
 ## 📫 Kontak
 - Email: muqorobin298@gmail.com
 - ## 🌐 Website
-[Lihat website aku].https://muqorobin298-lab.github.io/Robin_Dev/
+[Lihat website aku].(https://github.com/muqorobin298-lab/Robin_Dev)
