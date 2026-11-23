@@ -2,14 +2,156 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Halaman Robin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Robin | Substitute Developer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin-top: 80px; }
-    h1 { color: #2d6cdf; }
+    :root {
+      --bg: #0a0a0a;
+      --fg: #f5f5f5;
+      --accent: #ff6a00;
+      --panel: #151515;
+    }
+    body.bankai {
+      --bg: #f5f5f5;
+      --fg: #0a0a0a;
+      --accent: #d90429;
+      --panel: #e4e4e4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background 0.4s, color 0.4s;
+      position: relative;
+    }
+    /* Kanji latar belakang */
+    body::before {
+      content: "死神";
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 45vw;
+      font-weight: 900;
+      color: var(--accent);
+      opacity: 0.07;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    /* Garis tebasan diagonal */
+    .slash {
+      position: absolute;
+      top: 0; right: -10%;
+      width: 40%; height: 100%;
+      background: var(--accent);
+      transform: skewX(-20deg);
+      opacity: 0.9;
+      z-index: 0;
+      transition: background 0.4s;
+    }
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 50px 24px 70px;
+    }
+    .tag {
+      display: inline-block;
+      background: var(--fg);
+      color: var(--bg);
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 3px;
+      padding: 6px 12px;
+      margin-bottom: 14px;
+    }
+    h1 {
+      font-family: 'Anton', Impact, sans-serif;
+      font-size: clamp(70px, 18vw, 140px);
+      line-height: 0.95;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    h1 span { color: var(--accent); transition: color 0.4s; }
+    .sub {
+      font-family: 'Anton', Impact, sans-serif;
+      font-size: 22px;
+      letter-spacing: 4px;
+      margin: 10px 0 20px;
+      text-transform: uppercase;
+    }
+    .bio { max-width: 480px; line-height: 1.7; opacity: 0.9; margin-bottom: 40px; }
+    h2 {
+      font-family: 'Anton', Impact, sans-serif;
+      font-size: 28px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      border-left: 8px solid var(--accent);
+      padding-left: 12px;
+      margin-bottom: 18px;
+      transition: border-color 0.4s;
+    }
+    .skill { background: var(--panel); padding: 14px 16px; margin-bottom: 12px; border-left: 4px solid var(--fg); }
+    .skill b { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; letter-spacing: 1px; }
+    .bar { height: 8px; background: rgba(128,128,128,0.3); }
+    .bar i { display: block; height: 100%; background: var(--accent); transition: background 0.4s; }
+    .buttons { margin-top: 40px; display: flex; flex-wrap: wrap; gap: 12px; }
+    .btn {
+      font-family: 'Anton', Impact, sans-serif;
+      font-size: 18px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      border: 3px solid var(--fg);
+      background: transparent;
+      color: var(--fg);
+      padding: 12px 26px;
+      transition: all 0.2s;
+    }
+    .btn:hover { background: var(--fg); color: var(--bg); transform: translateY(-3px); }
+    .btn.main { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .btn.main:hover { background: var(--fg); border-color: var(--fg); color: var(--bg); }
+    footer { margin-top: 50px; font-size: 12px; letter-spacing: 2px; opacity: 0.6; }
   </style>
 </head>
 <body>
-  <h1>Hai, aku Robin! 👋</h1>
-  <p>Ini website pertamaku.</p>
+  <div class="slash"></div>
+
+  <div class="wrap">
+    <div class="tag">SUBSTITUTE DEVELOPER</div>
+    <h1>Ro<span>bin</span></h1>
+    <p class="sub">Web Developer in Training</p>
+    <p class="bio">
+      Lagi berlatih menempa kemampuan coding, satu commit demi satu commit.
+      Targetnya: dari pemula sampai mencapai Bankai.
+    </p>
+
+    <h2>Reiatsu (Skill)</h2>
+    <div class="skill"><b><span>HTML</span><span>60%</span></b><div class="bar"><i style="width:60%"></i></div></div>
+    <div class="skill"><b><span>CSS</span><span>50%</span></b><div class="bar"><i style="width:50%"></i></div></div>
+    <div class="skill"><b><span>JavaScript</span><span>30%</span></b><div class="bar"><i style="width:30%"></i></div></div>
+    <div class="skill"><b><span>Git &amp; GitHub</span><span>40%</span></b><div class="bar"><i style="width:40%"></i></div></div>
+
+    <div class="buttons">
+      <button class="btn main" id="bankaiBtn">Bankai!</button>
+      <a class="btn" href="https://github.com/muqorobin298-lab" target="_blank">GitHub</a>
+      <a class="btn" href="mailto:emailkamu@gmail.com">Kontak</a>
+    </div>
+
+    <footer>© ROBIN · DIBUAT DENGAN SEMANGAT SOUL REAPER</footer>
+  </div>
+
+  <script>
+    const btn = document.getElementById('bankaiBtn');
+    btn.addEventListener('click', () => {
+      document.body.classList.toggle('bankai');
+      btn.textContent = document.body.classList.contains('bankai') ? 'Kembali!' : 'Bankai!';
+    });
+  </script>
 </body>
 </html>
