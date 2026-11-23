@@ -237,7 +237,7 @@
     project.forEach(p => {
       const a = document.createElement("a");
       a.className = "kartu";
-      a.href = BASE + p.repo + "/";
+      a.href = p.demo || (BASE + p.repo + "/");
       a.target = "_blank";
       a.rel = "noopener";
       a.style.setProperty("--kc", tema[p.tema].accent);
