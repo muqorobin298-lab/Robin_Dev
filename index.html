@@ -93,6 +93,9 @@
     .kartu .aksi a { color: #f5f5f5; opacity: 0.7; }
     .kartu .aksi a:hover { opacity: 1; }
 
+    .kartu.mati { opacity: 0.55; }
+    .kartu.mati .aksi b { color: #ff9a9a; }
+
     /* SKILL */
     .skill {
       background: rgba(8,8,18,0.8); backdrop-filter: blur(4px);
@@ -172,6 +175,7 @@
     const urutan = Object.keys(tema);
 
     // ===== DAFTAR PROJECT (edit di sini kalau mau tambah project baru) =====
+    const USER = "muqorobin298-lab";
     const BASE = "https://muqorobin298-lab.github.io/";
     const KODE = "https://github.com/muqorobin298-lab/";
     const project = [
@@ -234,10 +238,11 @@
 
     // Bangun kartu project
     const grid = document.getElementById("grid");
+    const kartuList = [];
     project.forEach(p => {
       const a = document.createElement("a");
       a.className = "kartu";
-      a.href = p.demo || (BASE + p.repo + "/");
+      a.href = BASE + p.repo + "/";
       a.target = "_blank";
       a.rel = "noopener";
       a.style.setProperty("--kc", tema[p.tema].accent);
@@ -249,13 +254,43 @@
       // Tautan "KODE" menuju repo GitHub
       a.querySelector(".kode").addEventListener("click", e => {
         e.preventDefault(); e.stopPropagation();
-        window.open(KODE + p.repo, "_blank", "noopener");
+        window.open(KODE + (p.repoAsli || p.repo), "_blank", "noopener");
       });
       a.addEventListener("mouseenter", () => gantiTema(p.tema));
       a.addEventListener("focus", () => gantiTema(p.tema));
       a.addEventListener("touchstart", () => gantiTema(p.tema), { passive: true });
       grid.appendChild(a);
+      kartuList.push({ a, p });
     });
+
+    // ===== SESUAIKAN LINK DENGAN NAMA REPO ASLI DI GITHUB =====
+    // Membaca daftar repo publik, lalu mencocokkan lewat kata kunci pada nama repo.
+    (async function cocokkanRepo() {
+      try {
+        const res = await fetch("https://api.github.com/users/" + USER + "/repos?per_page=100");
+        if (!res.ok) return; // kalau gagal, pakai nama bawaan
+        const repos = await res.json();
+        kartuList.forEach(({ a, p }) => {
+          const kunci = p.repo.split("-")[0].toLowerCase();
+          const ketemu = repos.find(r => r.name.toLowerCase().includes(kunci));
+          const aksi = a.querySelector(".aksi b");
+          if (!ketemu) {
+            a.classList.add("mati");
+            a.removeAttribute("href");
+            aksi.textContent = "REPO BELUM ADA";
+            return;
+          }
+          p.repoAsli = ketemu.name;
+          if (!ketemu.has_pages) {
+            a.classList.add("mati");
+            a.href = KODE + ketemu.name;
+            aksi.textContent = "PAGES BELUM AKTIF";
+            return;
+          }
+          a.href = "https://" + USER.toLowerCase() + ".github.io/" + ketemu.name + "/";
+        });
+      } catch (e) { /* tanpa internet ke GitHub API: tetap pakai nama bawaan */ }
+    })();
 
     // Latar default saat tidak menunjuk kartu apa pun
     document.getElementById("project").addEventListener("mouseleave", () => gantiTema("senja"));
