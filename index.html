@@ -7,24 +7,28 @@
   <meta name="description" content="Portofolio Robin, web developer pemula. Kumpulan project HTML, CSS, dan JavaScript bertema Bleach.">
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    html { overflow-x: hidden; background: #3b1d5e; scroll-behavior: smooth; scroll-padding-top: 70px; }
     :root { --accent: #ff6a00; --spark: #ffcf8a; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
     body {
       font-family: 'Inter', Arial, sans-serif;
-      background: #050510; color: #f5f5f5;
-      overflow-x: hidden;
+      /* cadangan: kalau JS gagal, tetap ada latar senja, bukan hitam */
+      background: #c2410c;
+      background: linear-gradient(to top,#ff7b3d,#c2410c 40%,#3b1d5e 100%) fixed;
+      color: #f5f5f5; overflow-x: hidden;
     }
-    #scene { position: fixed; inset: 0; z-index: 0; overflow: hidden; }
-    .layer { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s ease; }
+
+    /* ===== LATAR ANIME ===== */
+    #scene { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; z-index: 0; overflow: hidden; }
+    .layer { position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 1.2s ease; }
     .layer.aktif { opacity: 1; }
     .kanji {
       position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
       font-size: 45vw; font-weight: 900; color: #fff; opacity: 0.06; white-space: nowrap;
     }
-    .orb { position: absolute; top: 9%; right: 10%; width: clamp(120px, 22vw, 260px); aspect-ratio: 1; border-radius: 50%; }
+    .orb { position: absolute; top: 9%; right: 10%; width: 22vw; height: 22vw; max-width: 260px; max-height: 260px; min-width: 120px; min-height: 120px; border-radius: 50%; }
     .city { position: absolute; bottom: 0; left: 0; width: 100%; height: 36vh; }
-    #sparks { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    #sparks { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; pointer-events: none; overflow: hidden; }
     .spark {
       position: absolute; bottom: -10px; border-radius: 50%;
       background: var(--spark); box-shadow: 0 0 8px var(--spark);
@@ -36,79 +40,123 @@
       100% { transform: translateY(-105vh) translateX(40px); opacity: 0; }
     }
 
-    .wrap { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 0 24px; }
-    section { padding-bottom: 70px; }
+    /* ===== NAVIGASI ===== */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 40;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 24px; background: rgba(8,8,18,0.82);
+      border-bottom: 2px solid var(--accent); transition: border-color 1s;
+    }
+    nav .logo { font-family: 'Anton', Impact, sans-serif; font-size: 22px; letter-spacing: 3px; color: #f5f5f5; text-decoration: none; }
+    nav .logo span { color: var(--accent); transition: color 1s; }
+    nav .menu { display: flex; gap: 6px; }
+    nav .menu a {
+      font-family: 'Anton', Impact, sans-serif; font-size: 14px; letter-spacing: 2px; text-transform: uppercase;
+      color: #f5f5f5; text-decoration: none; padding: 8px 12px; border: 2px solid transparent; transition: all 0.2s;
+    }
+    nav .menu a:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ===== UMUM ===== */
+    .wrap { position: relative; z-index: 1; max-width: 920px; margin: 0 auto; padding: 0 24px; }
+    section { padding-bottom: 80px; }
     h2 {
-      font-family: 'Anton', Impact, sans-serif; font-size: 28px; letter-spacing: 3px; text-transform: uppercase;
-      border-left: 8px solid var(--accent); padding-left: 12px; margin-bottom: 20px; transition: border-color 1s;
+      font-family: 'Anton', Impact, sans-serif; font-size: 30px; letter-spacing: 3px; text-transform: uppercase;
+      border-left: 8px solid var(--accent); padding-left: 12px; margin-bottom: 22px; transition: border-color 1s;
     }
     .btn {
       font-family: 'Anton', Impact, sans-serif; font-size: 18px; letter-spacing: 2px; text-transform: uppercase;
       text-decoration: none; cursor: pointer; display: inline-block;
-      border: 3px solid #f5f5f5; background: rgba(0,0,0,0.35); color: #f5f5f5;
+      border: 3px solid #f5f5f5; background: rgba(0,0,0,0.4); color: #f5f5f5;
       padding: 12px 26px; transition: all 0.2s;
     }
     .btn:hover { background: #f5f5f5; color: #000; transform: translateY(-3px); }
     .btn.main { background: var(--accent); border-color: var(--accent); color: #000; }
     .btn.main:hover { background: #fff; border-color: #fff; }
 
-    /* HERO */
-    #hero { padding-top: 70px; min-height: 90vh; display: flex; flex-direction: column; justify-content: center; }
+    /* ===== HERO ===== */
+    #hero { min-height: 100vh; padding-top: 110px; padding-bottom: 60px; display: flex; flex-direction: column; justify-content: center; }
     .tag {
       display: inline-block; align-self: flex-start; background: #f5f5f5; color: #000;
       font-weight: 600; font-size: 12px; letter-spacing: 3px; padding: 6px 12px; margin-bottom: 14px;
     }
     h1 {
-      font-family: 'Anton', Impact, sans-serif; font-size: clamp(80px, 22vw, 190px);
+      font-family: 'Anton', Impact, sans-serif; font-size: 22vw; max-height: none;
       line-height: 0.92; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 4px 20px rgba(0,0,0,0.6);
     }
+    @media (min-width: 900px) { h1 { font-size: 190px; } }
     h1 span { color: var(--accent); transition: color 1s; }
-    .sub { font-family: 'Anton', Impact, sans-serif; font-size: 22px; letter-spacing: 4px; margin: 12px 0 18px; text-transform: uppercase; }
-    .bio { max-width: 520px; line-height: 1.7; margin-bottom: 32px; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
-    .buttons { display: flex; flex-wrap: wrap; gap: 12px; }
+    .peran {
+      font-family: 'Anton', Impact, sans-serif; font-size: 22px; letter-spacing: 4px;
+      margin: 14px 0 16px; text-transform: uppercase; min-height: 32px;
+    }
+    .peran .kursor { display: inline-block; width: 3px; height: 22px; background: var(--accent); margin-left: 4px; vertical-align: -3px; animation: kedip 0.9s steps(1) infinite; }
+    @keyframes kedip { 50% { opacity: 0; } }
+    .bio { max-width: 520px; line-height: 1.7; margin-bottom: 30px; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
+    .buttons { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 36px; }
+    .stat { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; }
+    .stat div {
+      background: rgba(8,8,18,0.8); border-left: 4px solid var(--accent);
+      padding: 10px 18px; min-width: 110px; transition: border-color 1s;
+    }
+    .stat b { display: block; font-family: 'Anton', Impact, sans-serif; font-size: 30px; letter-spacing: 1px; color: var(--accent); transition: color 1s; }
+    .stat span { font-size: 11px; letter-spacing: 2px; opacity: 0.8; }
     .lokasi {
       font-family: 'Anton', Impact, sans-serif; letter-spacing: 3px; font-size: 13px;
-      color: var(--accent); margin-top: 26px; text-transform: uppercase; transition: color 1s;
+      color: var(--accent); text-transform: uppercase; transition: color 1s;
     }
+    .gulir {
+      margin-top: 26px; font-size: 12px; letter-spacing: 4px; opacity: 0.8; animation: naikturun 1.6s ease-in-out infinite;
+    }
+    @keyframes naikturun { 0%,100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
 
-    /* PROJECT */
+    /* ===== PROJECT ===== */
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
     .kartu {
-      display: flex; flex-direction: column; text-decoration: none; color: inherit;
-      background: rgba(8,8,18,0.82); backdrop-filter: blur(4px);
-      border-left: 6px solid var(--kc, #fff); padding: 20px 18px;
-      transition: transform 0.2s, background 0.2s;
+      position: relative; display: flex; flex-direction: column; text-decoration: none; color: inherit;
+      background: rgba(8,8,18,0.86);
+      border-left: 6px solid var(--kc, #fff); padding: 22px 18px 18px;
+      transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
     }
-    .kartu:hover, .kartu:focus-visible { transform: translateY(-5px); background: rgba(20,20,36,0.92); outline: none; }
+    .kartu:hover, .kartu:focus-visible { transform: translateY(-6px); background: rgba(20,20,36,0.95); outline: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 0 1px var(--kc); }
+    .kartu .no { position: absolute; top: 10px; right: 14px; font-family: 'Anton', Impact, sans-serif; font-size: 26px; color: var(--kc); opacity: 0.35; }
     .kartu .nama { font-family: 'Anton', Impact, sans-serif; font-size: 24px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
     .kartu .nama span { color: var(--kc); }
     .kartu p { font-size: 14px; line-height: 1.55; opacity: 0.85; flex: 1; margin-bottom: 14px; }
     .kartu .tek { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
-    .kartu .tek i {
-      font-style: normal; font-size: 11px; letter-spacing: 1px; padding: 4px 8px;
-      background: rgba(255,255,255,0.1);
-    }
+    .kartu .tek i { font-style: normal; font-size: 11px; letter-spacing: 1px; padding: 4px 8px; background: rgba(255,255,255,0.1); }
     .kartu .aksi { display: flex; justify-content: space-between; align-items: center; font-size: 13px; letter-spacing: 2px; }
     .kartu .aksi b { color: var(--kc); font-family: 'Anton', Impact, sans-serif; font-size: 15px; }
-    .kartu .aksi a { color: #f5f5f5; opacity: 0.7; }
-    .kartu .aksi a:hover { opacity: 1; }
-
+    .kartu .aksi .kode { opacity: 0.7; }
+    .kartu .aksi .kode:hover { opacity: 1; text-decoration: underline; }
     .kartu.mati { opacity: 0.55; }
     .kartu.mati .aksi b { color: #ff9a9a; }
 
-    /* SKILL */
-    .skill {
-      background: rgba(8,8,18,0.8); backdrop-filter: blur(4px);
-      padding: 14px 16px; margin-bottom: 12px; border-left: 4px solid #f5f5f5; max-width: 600px;
-    }
+    /* ===== SKILL ===== */
+    .skill { background: rgba(8,8,18,0.85); padding: 14px 16px; margin-bottom: 12px; border-left: 4px solid #f5f5f5; max-width: 620px; }
     .skill b { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; letter-spacing: 1px; }
     .bar { height: 8px; background: rgba(255,255,255,0.2); }
-    .bar i { display: block; height: 100%; background: var(--accent); box-shadow: 0 0 10px var(--accent); transition: background 1s; }
+    .bar i { display: block; height: 100%; width: 0; background: var(--accent); box-shadow: 0 0 10px var(--accent); transition: width 1.2s ease, background 1s; }
 
-    /* KONTAK */
+    /* ===== KONTAK ===== */
     .kontak p { max-width: 520px; line-height: 1.7; margin-bottom: 22px; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
-    footer { position: relative; z-index: 1; text-align: center; padding: 10px 0 40px; font-size: 12px; letter-spacing: 2px; opacity: 0.6; }
-    @media (prefers-reduced-motion: reduce) { .spark { animation: none; } html { scroll-behavior: auto; } }
+    .buttons.rapat { margin-bottom: 0; }
+    footer { position: relative; z-index: 1; text-align: center; padding: 10px 0 40px; font-size: 12px; letter-spacing: 2px; opacity: 0.7; }
+
+    /* Animasi muncul saat scroll: hanya aktif kalau JS jalan, jadi konten tidak pernah hilang */
+    .js .muncul { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .js .muncul.tampil { opacity: 1; transform: none; }
+
+    @media (max-width: 560px) {
+      nav { padding: 10px 14px; }
+      nav .logo { font-size: 18px; }
+      nav .menu a { padding: 6px 8px; font-size: 12px; letter-spacing: 1px; }
+      .wrap { padding: 0 16px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .spark, .gulir, .peran .kursor { animation: none; }
+      html { scroll-behavior: auto; }
+      .js .muncul { opacity: 1; transform: none; transition: none; }
+    }
   </style>
 </head>
 <body>
@@ -116,45 +164,60 @@
   <div id="scene"></div>
   <div id="sparks"></div>
 
+  <nav>
+    <a class="logo" href="#hero">RO<span>BIN</span></a>
+    <div class="menu">
+      <a href="#project">Project</a>
+      <a href="#skill">Skill</a>
+      <a href="#kontak">Kontak</a>
+    </div>
+  </nav>
+
   <div class="wrap">
 
     <!-- HERO -->
     <section id="hero">
       <div class="tag">SUBSTITUTE DEVELOPER</div>
       <h1>Ro<span>bin</span></h1>
-      <p class="sub">Web Developer in Training</p>
+      <p class="peran"><span id="peran"></span><span class="kursor"></span></p>
       <p class="bio">
-        Aku lagi belajar web development dari nol dan membangun satu project kecil demi satu.
-        Di bawah ini ada delapan project yang sudah online. Semuanya bisa langsung dicoba.
+        Aku belajar web development dari nol dan membangun satu project kecil demi satu.
+        Semua project di bawah sudah online dan bisa langsung dicoba.
       </p>
       <div class="buttons">
         <a class="btn main" href="#project">Lihat Project</a>
         <a class="btn" href="https://github.com/muqorobin298-lab" target="_blank" rel="noopener">GitHub</a>
         <a class="btn" href="#kontak">Kontak</a>
       </div>
+      <div class="stat">
+        <div><b id="jmlProject">0</b><span>PROJECT</span></div>
+        <div><b>6</b><span>TEMA ANIME</span></div>
+        <div><b>3</b><span>BAHASA WEB</span></div>
+      </div>
       <p class="lokasi" id="lokasi"></p>
+      <p class="gulir">SCROLL ↓</p>
     </section>
 
     <!-- PROJECT -->
     <section id="project">
-      <h2>Project</h2>
+      <h2 class="muncul">Project</h2>
       <div class="grid" id="grid"></div>
     </section>
 
     <!-- SKILL -->
     <section id="skill">
-      <h2>Reiatsu (Skill)</h2>
-      <div class="skill"><b><span>HTML</span><span>70%</span></b><div class="bar"><i style="width:70%"></i></div></div>
-      <div class="skill"><b><span>CSS</span><span>60%</span></b><div class="bar"><i style="width:60%"></i></div></div>
-      <div class="skill"><b><span>JavaScript</span><span>45%</span></b><div class="bar"><i style="width:45%"></i></div></div>
-      <div class="skill"><b><span>Git &amp; GitHub</span><span>50%</span></b><div class="bar"><i style="width:50%"></i></div></div>
+      <h2 class="muncul">Reiatsu (Skill)</h2>
+      <div class="skill muncul"><b><span>HTML</span><span>70%</span></b><div class="bar"><i data-w="70"></i></div></div>
+      <div class="skill muncul"><b><span>CSS</span><span>60%</span></b><div class="bar"><i data-w="60"></i></div></div>
+      <div class="skill muncul"><b><span>JavaScript</span><span>45%</span></b><div class="bar"><i data-w="45"></i></div></div>
+      <div class="skill muncul"><b><span>Git &amp; GitHub</span><span>50%</span></b><div class="bar"><i data-w="50"></i></div></div>
     </section>
 
     <!-- KONTAK -->
     <section id="kontak" class="kontak">
-      <h2>Kontak</h2>
-      <p>Tertarik berkolaborasi, magang, atau sekadar ngobrol soal coding dan anime? Hubungi aku.</p>
-      <div class="buttons">
+      <h2 class="muncul">Kontak</h2>
+      <p class="muncul">Tertarik berkolaborasi, magang, atau sekadar ngobrol soal coding dan anime? Hubungi aku.</p>
+      <div class="buttons rapat muncul">
         <a class="btn main" href="mailto:emailkamu@gmail.com">Kirim Email</a>
         <a class="btn" href="https://github.com/muqorobin298-lab" target="_blank" rel="noopener">GitHub</a>
       </div>
@@ -164,6 +227,8 @@
   <footer>© ROBIN · DIBUAT DENGAN SEMANGAT SOUL REAPER</footer>
 
   <script>
+    document.documentElement.classList.add("js");
+
     const tema = {
       senja:  { nama: "Senja Karakura", kanji: "代行", g: "linear-gradient(to top,#ff7b3d,#c2410c 40%,#3b1d5e 100%)", orb: "radial-gradient(circle,#fff3c4 0%,#ffd27a 60%,#ff9a3c 100%)", glow: "#ffb347", city: "#1a0a12", accent: "#ff6a00", spark: "#ffcf8a" },
       malam:  { nama: "Malam Bersalju", kanji: "月", g: "linear-gradient(to top,#2a4a7a,#10234a 50%,#030818 100%)", orb: "radial-gradient(circle,#ffffff 0%,#dbeafe 70%,#a5c8ff 100%)", glow: "#bcd8ff", city: "#050b1a", accent: "#4da6ff", spark: "#d6e8ff" },
@@ -179,15 +244,15 @@
     const BASE = "https://muqorobin298-lab.github.io/";
     const KODE = "https://github.com/muqorobin298-lab/";
     const project = [
-      { judul: ["Kuis", "Bleach"],      repo: "Kuis-Bleach",       tema: "malam",  tek: ["HTML", "CSS", "JS"], desc: "Kuis pilihan ganda tentang Bleach. Latar berganti tiap soal dan ada peringkat di akhir." },
-      { judul: ["Todo", "Bleach"],      repo: "Todo-Bleach",       tema: "senja",  tek: ["HTML", "CSS", "JS", "localStorage"], desc: "Daftar misi harian. Makin banyak yang selesai, makin keren latarnya sampai BANKAI!" },
-      { judul: ["Kalkulator", "Bleach"],repo: "Kalkulator-Bleach", tema: "soul",   tek: ["HTML", "CSS", "JS"], desc: "Kalkulator dengan dukungan keyboard. Latar berubah setiap hitungan selesai." },
-      { judul: ["Catatan", "Bleach"],   repo: "Catatan-Bleach",    tema: "es",     tek: ["HTML", "CSS", "JS", "localStorage"], desc: "Catatan harian dengan pilihan suasana hati. Tiap mood punya latar anime sendiri." },
-      { judul: ["Cuaca", "Bleach"],     repo: "Cuaca-Bleach",      tema: "sakura", tek: ["HTML", "CSS", "JS", "API"], desc: "Cek cuaca kota mana saja lewat Open-Meteo API. Latar mengikuti kondisi cuaca." },
-      { judul: ["Tebak", "Angka"],      repo: "Tebak-Angka-Bleach",tema: "bankai", tek: ["HTML", "CSS", "JS"], desc: "Game tebak angka 1-100. Semakin dekat tebakanmu, semakin panas reiatsu-nya." },
-      { judul: ["Pomodoro", "Bleach"],  repo: "Pomodoro-Bleach",   tema: "senja",  tek: ["HTML", "CSS", "JS", "Audio"], desc: "Timer fokus 25 menit dengan bunyi bip dan latar yang makin panas menuju akhir." },
-      { judul: ["Memori", "Bleach"],    repo: "Memori-Bleach",     tema: "es",     tek: ["HTML", "CSS", "JS"], desc: "Game memori 16 kartu kanji. Latar berganti tiap pasangan ketemu, sampai BANKAI!" }
-      { judul: ["Ketik", "Cepat"], repo: "Ketik-Cepat-Bleach", tema: "sakura", tek: ["HTML", "CSS", "JS"], desc: "Tes ngetik 30 detik dengan istilah Bleach. Makin banyak benar, makin panas latarnya." }
+      { judul: ["Kuis", "Bleach"],       repo: "Kuis-Bleach",        tema: "malam",  tek: ["HTML", "CSS", "JS"], desc: "Kuis pilihan ganda tentang Bleach. Latar berganti tiap soal dan ada peringkat di akhir." },
+      { judul: ["Todo", "Bleach"],       repo: "Todo-Bleach",        tema: "senja",  tek: ["HTML", "CSS", "JS", "localStorage"], desc: "Daftar misi harian. Tiap kotak berganti warna saat ditekan, latar makin panas sampai BANKAI!" },
+      { judul: ["Kalkulator", "Bleach"], repo: "Kalkulator-Bleach",  tema: "soul",   tek: ["HTML", "CSS", "JS"], desc: "Kalkulator dengan dukungan keyboard. Latar berubah setiap hitungan selesai." },
+      { judul: ["Catatan", "Bleach"],    repo: "Catatan-Bleach",     tema: "es",     tek: ["HTML", "CSS", "JS", "localStorage"], desc: "Catatan harian dengan pilihan suasana hati. Tiap mood punya latar anime sendiri." },
+      { judul: ["Cuaca", "Bleach"],      repo: "Cuaca-Bleach",       tema: "sakura", tek: ["HTML", "CSS", "JS", "API"], desc: "Cek cuaca kota mana saja lewat Open-Meteo API. Latar mengikuti kondisi cuaca." },
+      { judul: ["Tebak", "Angka"],       repo: "Tebak-Angka-Bleach", tema: "bankai", tek: ["HTML", "CSS", "JS"], desc: "Game tebak angka 1-100. Semakin dekat tebakanmu, semakin panas reiatsu-nya." },
+      { judul: ["Pomodoro", "Bleach"],   repo: "Pomodoro-Bleach",    tema: "senja",  tek: ["HTML", "CSS", "JS", "Audio"], desc: "Timer fokus 25 menit dengan bunyi bip dan latar yang makin panas menuju akhir." },
+      { judul: ["Memori", "Bleach"],     repo: "Memori-Bleach",      tema: "es",     tek: ["HTML", "CSS", "JS"], desc: "Game memori 16 kartu kanji. Latar berganti tiap pasangan ketemu, sampai BANKAI!" },
+      { judul: ["Ketik", "Cepat"],       repo: "Ketik-Cepat-Bleach", tema: "sakura", tek: ["HTML", "CSS", "JS"], desc: "Tes ngetik 30 detik dengan istilah Bleach. Makin banyak benar, makin panas latarnya." }
     ];
 
     const kota = `<svg class="city" viewBox="0 0 1200 300" preserveAspectRatio="xMidYMax slice" fill="CITYCOLOR">
@@ -238,22 +303,42 @@
       document.getElementById("lokasi").textContent = "// " + t.nama;
     }
 
-    // Bangun kartu project
+    // ===== EFEK MENGETIK PADA PERAN =====
+    const peran = ["Web Developer in Training", "Soul Reaper Coder", "Pembuat Project Bleach", "Pelajar yang Tak Menyerah"];
+    const elPeran = document.getElementById("peran");
+    const kurangGerak = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (kurangGerak) {
+      elPeran.textContent = peran[0];
+    } else {
+      let p = 0, h = 0, hapus = false;
+      (function ketik() {
+        const kata = peran[p];
+        elPeran.textContent = kata.slice(0, h);
+        let tunda = hapus ? 35 : 75;
+        if (!hapus && h === kata.length) { hapus = true; tunda = 1600; }
+        else if (hapus && h === 0) { hapus = false; p = (p + 1) % peran.length; tunda = 350; }
+        else h += hapus ? -1 : 1;
+        setTimeout(ketik, tunda);
+      })();
+    }
+
+    // ===== BANGUN KARTU PROJECT =====
+    document.getElementById("jmlProject").textContent = project.length;
     const grid = document.getElementById("grid");
     const kartuList = [];
-    project.forEach(p => {
+    project.forEach((p, i) => {
       const a = document.createElement("a");
-      a.className = "kartu";
+      a.className = "kartu muncul";
       a.href = BASE + p.repo + "/";
       a.target = "_blank";
       a.rel = "noopener";
       a.style.setProperty("--kc", tema[p.tema].accent);
       a.innerHTML =
+        '<span class="no">' + String(i + 1).padStart(2, "0") + "</span>" +
         '<div class="nama">' + p.judul[0] + " <span>" + p.judul[1] + "</span></div>" +
         "<p>" + p.desc + "</p>" +
         '<div class="tek">' + p.tek.map(t => "<i>" + t + "</i>").join("") + "</div>" +
         '<div class="aksi"><b>COBA SEKARANG</b><span class="kode">KODE</span></div>';
-      // Tautan "KODE" menuju repo GitHub
       a.querySelector(".kode").addEventListener("click", e => {
         e.preventDefault(); e.stopPropagation();
         window.open(KODE + (p.repoAsli || p.repo), "_blank", "noopener");
@@ -266,11 +351,10 @@
     });
 
     // ===== SESUAIKAN LINK DENGAN NAMA REPO ASLI DI GITHUB =====
-    // Membaca daftar repo publik, lalu mencocokkan lewat kata kunci pada nama repo.
     (async function cocokkanRepo() {
       try {
         const res = await fetch("https://api.github.com/users/" + USER + "/repos?per_page=100");
-        if (!res.ok) return; // kalau gagal, pakai nama bawaan
+        if (!res.ok) return;
         const repos = await res.json();
         kartuList.forEach(({ a, p }) => {
           const kunci = p.repo.split("-")[0].toLowerCase();
@@ -291,12 +375,59 @@
           }
           a.href = "https://" + USER.toLowerCase() + ".github.io/" + ketemu.name + "/";
         });
-      } catch (e) { /* tanpa internet ke GitHub API: tetap pakai nama bawaan */ }
+      } catch (e) { /* tanpa API GitHub: tetap pakai nama bawaan */ }
     })();
 
-    // Latar default saat tidak menunjuk kartu apa pun
-    document.getElementById("project").addEventListener("mouseleave", () => gantiTema("senja"));
+    // ===== LATAR BERGANTI SESUAI POSISI SCROLL (turun maupun naik) =====
+    // Bagian atas = Senja, tiap kartu project = tema kartunya, Skill = Soul Society, Kontak = BANKAI!
+    function temaDariScroll() {
+      const tengah = window.innerHeight * 0.5;
+      const atas = id => document.getElementById(id).getBoundingClientRect();
+      const pr = atas("project"), sk = atas("skill"), ko = atas("kontak");
+      const dasar = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+
+      if (dasar || tengah >= ko.top) return gantiTema("bankai");
+      if (tengah >= sk.top) return gantiTema("soul");
+      if (tengah >= pr.top) {
+        let terdekat = null, jarak = Infinity;
+        kartuList.forEach(({ a, p }) => {
+          const r = a.getBoundingClientRect();
+          const d = Math.abs((r.top + r.bottom) / 2 - tengah);
+          if (d < jarak) { jarak = d; terdekat = p; }
+        });
+        return gantiTema(terdekat ? terdekat.tema : "senja");
+      }
+      gantiTema("senja");
+    }
+    let menunggu = false;
+    function jadwalkanTema() {
+      if (menunggu) return;
+      menunggu = true;
+      requestAnimationFrame(() => { menunggu = false; temaDariScroll(); });
+    }
+    window.addEventListener("scroll", jadwalkanTema, { passive: true });
+    window.addEventListener("resize", jadwalkanTema);
+    // Setelah kursor meninggalkan daftar project, latar kembali mengikuti scroll
+    document.getElementById("project").addEventListener("mouseleave", jadwalkanTema);
+
+    // ===== ANIMASI MUNCUL SAAT SCROLL (+ isi bar skill) =====
+    const semua = document.querySelectorAll(".muncul");
+    function isiBar(el) {
+      el.querySelectorAll(".bar i").forEach(i => { i.style.width = i.dataset.w + "%"; });
+    }
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver(es => {
+        es.forEach(e => {
+          if (e.isIntersecting) { e.target.classList.add("tampil"); isiBar(e.target); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.12 });
+      semua.forEach(el => io.observe(el));
+    } else {
+      semua.forEach(el => { el.classList.add("tampil"); isiBar(el); });
+    }
+
     gantiTema("senja");
+    temaDariScroll();
   </script>
 </body>
 </html>
