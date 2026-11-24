@@ -145,7 +145,7 @@
       position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center;
       font-family: 'Anton', Impact, sans-serif; font-size: 110px; color: var(--accent); transition: color 1s;
     }
-    .dev-foto img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; }
+    .dev-foto img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
     .dev-label { font-size: 12px; letter-spacing: 6px; opacity: 0.75; margin-bottom: 6px; }
     .dev-nama {
       font-family: 'Anton', Impact, sans-serif; font-size: 50px; line-height: 1.1; letter-spacing: 3px; text-transform: uppercase;
@@ -505,6 +505,29 @@
         if (el) el.textContent = "";
       }
     }
+    // ===== DIAM = WARNA BERGANTI SENDIRI (seperti di bagian Developer) =====
+    const JEDA_DIAM = 3000;
+    let diamTimer = null, diamLoop = null;
+    function mulaiDiam() {
+      if (kurangGerak || diamLoop || devTimer) return; // bagian Developer sudah berganti sendiri
+      diamLoop = setInterval(() => {
+        const i = (urutan.indexOf(aktif) + 1) % urutan.length;
+        gantiTema(urutan[i]);
+      }, 3500);
+    }
+    function adaGerakan() {
+      if (diamLoop) {
+        clearInterval(diamLoop);
+        diamLoop = null;
+        jadwalkanTema(); // kembali mengikuti posisi scroll
+      }
+      clearTimeout(diamTimer);
+      diamTimer = setTimeout(mulaiDiam, JEDA_DIAM);
+    }
+    ["scroll", "mousemove", "mousedown", "wheel", "keydown", "touchstart", "touchmove"].forEach(ev =>
+      window.addEventListener(ev, adaGerakan, { passive: true })
+    );
+
     let menunggu = false;
     function jadwalkanTema() {
       if (menunggu) return;
@@ -534,6 +557,7 @@
 
     gantiTema("senja");
     temaDariScroll();
+    diamTimer = setTimeout(mulaiDiam, JEDA_DIAM);
   </script>
 </body>
 </html>
