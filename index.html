@@ -272,7 +272,7 @@
         const repos = await res.json();
         kartuList.forEach(({ a, p }) => {
           const kunci = p.repo.split("-")[0].toLowerCase();
-          const ketemu = repos.find(r => r.name.toLowerCase().includes(kunci));
+          const ketemu = repos.find(r => r.name.toLowerCase() === p.repo.toLowerCase()) || repos.find(r => r.name.toLowerCase().includes(kunci));
           const aksi = a.querySelector(".aksi b");
           if (!ketemu) {
             a.classList.add("mati");
