@@ -75,9 +75,28 @@
 
     /* ===== HERO ===== */
     #hero { min-height: 100vh; padding-top: 110px; padding-bottom: 60px; display: flex; flex-direction: column; justify-content: center; }
+    .profil {
+      text-decoration: none; color: inherit; cursor: pointer;
+      display: flex; align-items: center; gap: 16px; align-self: flex-start;
+      background: rgba(8,8,18,0.82); border-left: 6px solid var(--accent);
+      padding: 12px 22px 12px 14px; margin-bottom: 18px; transition: border-color 1s;
+    }
+    .foto {
+      position: relative; width: 76px; height: 76px; flex: none; border-radius: 50%; overflow: hidden;
+      border: 3px solid var(--accent); background: #111; transition: border-color 1s;
+      box-shadow: 0 0 18px rgba(0,0,0,0.5);
+    }
+    .foto b {
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center;
+      font-family: 'Anton', Impact, sans-serif; font-size: 38px; color: var(--accent); transition: color 1s;
+    }
+    .foto img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+    .profil .nama { font-family: 'Anton', Impact, sans-serif; font-size: 30px; letter-spacing: 3px; text-transform: uppercase; line-height: 1.05; }
+    .profil .jabatan { font-size: 13px; letter-spacing: 4px; text-transform: uppercase; color: var(--accent); margin-top: 6px; font-weight: 600; transition: color 1s; }
     .tag {
-      display: inline-block; align-self: flex-start; background: #f5f5f5; color: #000;
-      font-weight: 600; font-size: 12px; letter-spacing: 3px; padding: 6px 12px; margin-bottom: 14px;
+      display: block; align-self: flex-start; background: none; color: #f5f5f5;
+      font-family: 'Anton', Impact, sans-serif; font-size: 22px; letter-spacing: 4px; text-transform: uppercase;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8); padding: 0; margin-bottom: 14px;
     }
     h1 {
       font-family: 'Anton', Impact, sans-serif; font-size: 22vw; max-height: none;
@@ -108,6 +127,46 @@
       margin-top: 26px; font-size: 12px; letter-spacing: 4px; opacity: 0.8; animation: naikturun 1.6s ease-in-out infinite;
     }
     @keyframes naikturun { 0%,100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+
+
+    /* ===== DEVELOPER (PROFIL BESAR DI TENGAH) ===== */
+    #developer { min-height: 100vh; padding-top: 100px; display: flex; align-items: center; justify-content: center; }
+    .dev-kartu {
+      width: 100%; max-width: 660px; text-align: center;
+      background: rgba(8,8,18,0.84); border-top: 6px solid var(--accent);
+      padding: 44px 28px 40px; transition: border-color 1s;
+    }
+    .dev-foto {
+      position: relative; width: 210px; height: 210px; margin: 0 auto 22px; border-radius: 50%; overflow: hidden;
+      border: 6px solid var(--accent); background: #111; transition: border-color 1s;
+      box-shadow: 0 0 40px rgba(0,0,0,0.55), 0 0 60px var(--accent);
+    }
+    .dev-foto b {
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center;
+      font-family: 'Anton', Impact, sans-serif; font-size: 110px; color: var(--accent); transition: color 1s;
+    }
+    .dev-foto img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; }
+    .dev-label { font-size: 12px; letter-spacing: 6px; opacity: 0.75; margin-bottom: 6px; }
+    .dev-nama {
+      font-family: 'Anton', Impact, sans-serif; font-size: 50px; line-height: 1.1; letter-spacing: 3px; text-transform: uppercase;
+      border: none; padding: 0; margin-bottom: 10px; text-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    }
+    .dev-jabatan {
+      font-family: 'Anton', Impact, sans-serif; font-size: 22px; letter-spacing: 6px; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 22px; transition: color 1s;
+    }
+    .dev-motto {
+      font-size: 19px; line-height: 1.7; font-style: italic; max-width: 480px; margin: 0 auto 26px;
+      padding: 14px 0; border-top: 1px solid rgba(255,255,255,0.25); border-bottom: 1px solid rgba(255,255,255,0.25);
+    }
+    .dev-warna { font-family: 'Anton', Impact, sans-serif; letter-spacing: 3px; font-size: 13px; color: var(--accent); text-transform: uppercase; margin-top: 18px; transition: color 1s; }
+    @media (max-width: 560px) {
+      .dev-foto { width: 160px; height: 160px; }
+      .dev-foto b { font-size: 84px; }
+      .dev-nama { font-size: 34px; letter-spacing: 2px; }
+      .dev-jabatan { font-size: 17px; letter-spacing: 4px; }
+      .dev-motto { font-size: 16px; }
+    }
 
     /* ===== PROJECT ===== */
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
@@ -167,6 +226,7 @@
   <nav>
     <a class="logo" href="#hero">RO<span>BIN</span></a>
     <div class="menu">
+      <a href="#developer">Developer</a>
       <a href="#project">Project</a>
       <a href="#skill">Skill</a>
       <a href="#kontak">Kontak</a>
@@ -177,7 +237,7 @@
 
     <!-- HERO -->
     <section id="hero">
-      <div class="tag">SUBSTITUTE DEVELOPER</div>
+      <div class="tag">Welcome to my website and enjoyy!!!!</div>
       <h1>Ro<span>bin</span></h1>
       <p class="peran"><span id="peran"></span><span class="kursor"></span></p>
       <p class="bio">
@@ -196,6 +256,25 @@
       </div>
       <p class="lokasi" id="lokasi"></p>
       <p class="gulir">SCROLL ↓</p>
+    </section>
+
+    <!-- DEVELOPER -->
+    <section id="developer">
+      <div class="dev-kartu muncul">
+        <div class="dev-foto">
+          <b>M</b>
+          <img src="foto.jpg" alt="Foto Muhammad Muqorrobin" onerror="this.remove()">
+        </div>
+        <p class="dev-label">DEVELOPER</p>
+        <h2 class="dev-nama">Muhammad Muqorrobin</h2>
+        <p class="dev-jabatan">Web Developing</p>
+        <p class="dev-motto">“Berusahalah terus, terus walaupun tumbang, tujuan mu tetep di 1 mata. Don't give up!”</p>
+        <div class="buttons rapat" style="justify-content:center">
+          <a class="btn main" href="#project">Lihat Project</a>
+          <a class="btn" href="#kontak">Hubungi Aku</a>
+        </div>
+        <p class="dev-warna" id="devWarna"></p>
+      </div>
     </section>
 
     <!-- PROJECT -->
@@ -383,21 +462,48 @@
     function temaDariScroll() {
       const tengah = window.innerHeight * 0.5;
       const atas = id => document.getElementById(id).getBoundingClientRect();
-      const pr = atas("project"), sk = atas("skill"), ko = atas("kontak");
+      const dv = atas("developer"), pr = atas("project"), sk = atas("skill"), ko = atas("kontak");
       const dasar = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
 
-      if (dasar || tengah >= ko.top) return gantiTema("bankai");
-      if (tengah >= sk.top) return gantiTema("soul");
-      if (tengah >= pr.top) {
+      let hasil;
+      if (dasar || tengah >= ko.top) hasil = "bankai";
+      else if (tengah >= sk.top) hasil = "soul";
+      else if (tengah >= pr.top) {
         let terdekat = null, jarak = Infinity;
         kartuList.forEach(({ a, p }) => {
           const r = a.getBoundingClientRect();
           const d = Math.abs((r.top + r.bottom) / 2 - tengah);
           if (d < jarak) { jarak = d; terdekat = p; }
         });
-        return gantiTema(terdekat ? terdekat.tema : "senja");
+        hasil = terdekat ? terdekat.tema : "senja";
       }
-      gantiTema("senja");
+      else if (tengah >= dv.top) hasil = "DEV";
+      else hasil = "senja";
+
+      if (hasil === "DEV") { aturModeDev(true); return; }
+      aturModeDev(false);
+      gantiTema(hasil);
+    }
+
+    // Di bagian Developer, warna latar berganti sendiri tiap beberapa detik
+    let devTimer = null, devIdx = 0;
+    function langkahDev() {
+      devIdx = (devIdx + 1) % urutan.length;
+      gantiTema(urutan[devIdx]);
+      const el = document.getElementById("devWarna");
+      if (el) el.textContent = "// " + tema[urutan[devIdx]].nama;
+    }
+    function aturModeDev(nyala) {
+      if (nyala && !devTimer) {
+        devIdx = Math.max(0, urutan.indexOf(aktif));
+        langkahDev();
+        devTimer = setInterval(langkahDev, 3500);
+      } else if (!nyala && devTimer) {
+        clearInterval(devTimer);
+        devTimer = null;
+        const el = document.getElementById("devWarna");
+        if (el) el.textContent = "";
+      }
     }
     let menunggu = false;
     function jadwalkanTema() {
