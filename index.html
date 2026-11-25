@@ -607,17 +607,17 @@
     //   id:   "https://www.youtube.com/watch?v=xxxx" -> tempel link YouTube utuh (ID diambil otomatis)
     // Lagu yang file/id-nya kosong atau gagal dimuat otomatis dilewati.
     var LAGU = [
-      { judul: "Tokyo Revengers",   file: "musik/tokyo-revengers.mp3", id: "https://www.youtube.com/watch?v=F3YC4bdUoMY" },
-      { judul: "AOT Opening 1",     file: "musik/aot-opening-1.mp3", id: "https://www.youtube.com/watch?v=8OkpRK2_gVs" },
-      { judul: "AOT Season 2",      file: "musik/aot-season-2.mp3", id: "https://www.youtube.com/watch?v=CID-sYQNCew" },
-      { judul: "Asterisk - ORANGE RANGE",              file: "musik/asterisk.mp3",          id: "" },
-      { judul: "Ichirin no Hana - HIGH and MIGHTY COLOR", file: "musik/ichirin-no-hana.mp3", id: "" },
-      { judul: "Velonica - Aqua Timez",                file: "musik/velonica.mp3",          id: "" },
-      { judul: "Number One - Shiro Sagisu",            file: "musik/number-one.mp3",        id: "" },
-      { judul: "Never Meant to Belong - Shiro Sagisu", file: "musik/never-meant-to-belong.mp3", id: "" },
-      { judul: "Gurenge - LiSA",                       file: "musik/gurenge.mp3",           id: "" },
-      { judul: "Guren no Yumiya - Linked Horizon",     file: "musik/guren-no-yumiya.mp3",   id: "" },
-      { judul: "Kaikai Kitan - Eve",                   file: "musik/kaikai-kitan.mp3",      id: "" }
+      { judul: "Tokyo Revengers",   file: "tokyo-revengers.mp3.mpeg", id: "" },   // YouTube dimatikan (ada iklan): https://www.youtube.com/watch?v=F3YC4bdUoMY
+      { judul: "AOT Opening 1",     file: "aot-opening-1.mp3.mpeg", id: "" },   // YouTube dimatikan (ada iklan): https://www.youtube.com/watch?v=8OkpRK2_gVs
+      { judul: "AOT Season 2",      file: "aot-season-2.mp3.mpeg", id: "" },   // YouTube dimatikan (ada iklan): https://www.youtube.com/watch?v=CID-sYQNCew
+      // belum ada file: { judul: "Asterisk - ORANGE RANGE",              file: "musik/asterisk.mp3",          id: "" }
+      // belum ada file: { judul: "Ichirin no Hana - HIGH and MIGHTY COLOR", file: "musik/ichirin-no-hana.mp3", id: "" }
+      // belum ada file: { judul: "Velonica - Aqua Timez",                file: "musik/velonica.mp3",          id: "" }
+      // belum ada file: { judul: "Number One - Shiro Sagisu",            file: "musik/number-one.mp3",        id: "" }
+      // belum ada file: { judul: "Never Meant to Belong - Shiro Sagisu", file: "musik/never-meant-to-belong.mp3", id: "" }
+      // belum ada file: { judul: "Gurenge - LiSA",                       file: "musik/gurenge.mp3",           id: "" }
+      // belum ada file: { judul: "Guren no Yumiya - Linked Horizon",     file: "musik/guren-no-yumiya.mp3",   id: "" }
+      // belum ada file: { judul: "Kaikai Kitan - Eve",                   file: "musik/kaikai-kitan.mp3",      id: "" }
     ];
     var ACAK_URUTAN = false;   // true = urutan lagu diacak tiap buka web
 
@@ -647,6 +647,14 @@
       if (ytSiap) { try { yt.stopVideo(); } catch (e) {} }
     }
 
+    var EKS = ["mp3", "m4a", "mp4", "webm", "ogg", "wav", "aac", "mp3.mpeg", "mpeg"];
+    function kandidat(l) {
+      var dasar = l.file.replace(/(\.(mp3|m4a|mp4|webm|ogg|wav|aac|mpeg|mpg))+$/i, ""), c = [l.file];
+      EKS.forEach(function (e) { var f = dasar + "." + e; if (c.indexOf(f) < 0) c.push(f); });
+      var d = c.slice(); d.forEach(function (f) { if (f.indexOf("musik/") !== 0) c.push("musik/" + f); });
+      return c;
+    }
+    var catatGagal = [];
     function muat(i) {
       idx = (i + LAGU.length) % LAGU.length;
       var l = LAGU[idx];
@@ -656,7 +664,7 @@
         if (ytSiap) { yt.loadVideoById(l.id); yt.setVolume(bisu ? 0 : 60); }
         else { ytMau = l.id; siapkanYT(); }
       } else {
-        audio.src = l.file; audio.muted = bisu;
+        l._k = 0; audio.src = l.file; audio.muted = bisu;
         var p = audio.play();
         if (p && p.then) p.then(function () { main = true; tampil(); }).catch(function () { main = false; tampil(); });
       }
@@ -668,9 +676,10 @@
       var kode = e && e.data ? e.data : 0;
       if (gagalBeruntun >= LAGU.length) {
         main = false; tampil();
-        elJudul.textContent = location.protocol === "file:"
-          ? "Buka lewat https/GitHub Pages, jangan klik dua kali file (YouTube menolak)"
-          : "Semua video ditolak diputar di web lain (kode " + kode + "). Ganti link video lain";
+        var pesan = catatGagal.length ? "Gagal: " + catatGagal.join("; ") + ". Cek nama file & folder musik/. " : "";
+        if (location.protocol === "file:") pesan += "Link YouTube tidak bisa dari file lokal, buka lewat https/GitHub Pages.";
+        else if (kode) pesan += "Video YouTube ditolak diputar di web lain (kode " + kode + "), ganti link lain.";
+        elJudul.textContent = pesan || "Tidak ada lagu yang bisa diputar";
         box.classList.remove("sembunyi"); box.classList.remove("diam");
         return;
       }
@@ -681,7 +690,12 @@
     audio.addEventListener("ended", function () { lanjut(1); });   // habis -> otomatis ganti lagu
     audio.addEventListener("error", function () {
       var l = LAGU[idx];
-      if (l && l.id && !l._yt) { l._yt = true; muat(idx); } else { gagal(); }   // file tidak ada -> coba YouTube
+      if (l && l.file && !l._yt) {
+        var c = kandidat(l); l._k = (l._k || 0) + 1;
+        if (l._k < c.length) { audio.src = c[l._k]; var p = audio.play(); if (p && p.catch) p.catch(function () {}); return; }   // coba format lain
+        catatGagal.push(l.file + " (file tidak ditemukan/tidak bisa dibuka)");
+      }
+      if (l && l.id && !l._yt) { l._yt = true; muat(idx); } else { gagal(); }   // lalu coba YouTube
     });
 
     // ===== YouTube (hanya dimuat kalau ada lagu berisi id) =====
