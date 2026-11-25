@@ -216,7 +216,33 @@
       html { scroll-behavior: auto; }
       .js .muncul { opacity: 1; transform: none; transition: none; }
     }
-  </style>
+  
+    /* ===== PEMUTAR MUSIK ===== */
+    #musik {
+      position: fixed; right: 14px; bottom: 14px; z-index: 50;
+      display: flex; align-items: center; gap: 6px; max-width: calc(100vw - 28px);
+      background: rgba(8,8,18,0.88); border: 2px solid var(--accent); padding: 6px 8px;
+      transition: border-color 1s;
+    }
+    #musik button {
+      font-family: 'Anton', Impact, sans-serif; font-size: 16px; line-height: 1; cursor: pointer;
+      width: 34px; height: 34px; background: rgba(0,0,0,0.4); color: #f5f5f5; border: 2px solid #f5f5f5; transition: all 0.2s;
+    }
+    #musik button:hover { background: var(--accent); border-color: var(--accent); color: #000; }
+    #musik .judul {
+      font-family: 'Anton', Impact, sans-serif; font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--accent); width: 150px; overflow: hidden; white-space: nowrap; transition: color 1s;
+    }
+    #musik .judul span { display: inline-block; padding-left: 100%; animation: geser 12s linear infinite; }
+    #musik.diam .judul span { animation: none; padding-left: 0; }
+    @keyframes geser { to { transform: translateX(-100%); } }
+    #ytbox { position: fixed; left: 0; bottom: 0; width: 200px; height: 200px; opacity: 0.01; pointer-events: none; z-index: -1; overflow: hidden; }
+    #musik { transition: transform 0.35s ease, border-color 1s; }
+    #musik.sembunyi { transform: translateX(calc(100% - 38px)); }
+    #musik #mTutup { width: 26px; background: transparent; border-color: transparent; color: var(--accent); }
+    #musik #mTutup:hover { background: var(--accent); border-color: var(--accent); color: #000; }
+    @media (max-width: 520px) { #musik .judul { width: 90px; } }
+</style>
 </head>
 <body>
 
@@ -332,7 +358,8 @@
       { judul: ["Pomodoro", "Bleach"],   repo: "Pomodoro-Bleach",    tema: "senja",  tek: ["HTML", "CSS", "JS", "Audio"], desc: "Timer fokus 25 menit dengan bunyi bip dan latar yang makin panas menuju akhir." },
       { judul: ["Memori", "Bleach"],     repo: "Memori-Bleach",      tema: "es",     tek: ["HTML", "CSS", "JS"], desc: "Game memori 16 kartu kanji. Latar berganti tiap pasangan ketemu, sampai BANKAI!" },
       { judul: ["Ketik", "Cepat"],       repo: "Ketik-Cepat-Bleach", tema: "sakura", tek: ["HTML", "CSS", "JS"], desc: "Tes ngetik 30 detik dengan istilah Bleach. Makin banyak benar, makin panas latarnya." },
-      { judul: ["Lari", "Bleach"],       repo: "Lari-Bleach",        tema: "soul",   tek: ["HTML", "CSS", "JS", "Canvas"], desc: "Game lari ala dinosaurus Chrome. Lompati tiang dan tunduki roh terbang, latar berganti sampai BANKAI!" }
+      { judul: ["Lari", "Bleach"],       repo: "Lari-Bleach",        tema: "soul",   tek: ["HTML", "CSS", "JS", "Canvas"], desc: "Game lari ala dinosaurus Chrome. Lompati tiang dan tunduki roh terbang, latar berganti sampai BANKAI!" },
+      { judul: ["Stickman", "Duel"],     repo: "Stickman-Bleach",    tema: "bankai", tek: ["HTML", "CSS", "JS", "Canvas"], desc: "Duel stickman 1 lawan 1. Pilih senjata dan kostum, lawan komputer atau teman dengan 2 analog." }
     ];
 
     const kota = `<svg class="city" viewBox="0 0 1200 300" preserveAspectRatio="xMidYMax slice" fill="CITYCOLOR">
@@ -559,6 +586,173 @@
     gantiTema("senja");
     temaDariScroll();
     diamTimer = setTimeout(mulaiDiam, JEDA_DIAM);
+  </script>
+
+  <!-- PEMUTAR MUSIK -->
+  <div id="musik" class="diam">
+    <button id="mTutup" title="Sembunyikan / tampilkan" aria-label="Sembunyikan atau tampilkan pemutar">&#9654;</button>
+    <div class="judul"><span id="mJudul">Klik untuk mulai musik</span></div>
+    <button id="mPrev" title="Sebelumnya" aria-label="Sebelumnya">&#9198;</button>
+    <button id="mPlay" title="Putar / Jeda" aria-label="Putar atau jeda">&#9654;</button>
+    <button id="mNext" title="Berikutnya" aria-label="Berikutnya">&#9197;</button>
+    <button id="mMute" title="Bisukan" aria-label="Bisukan">&#128266;</button>
+  </div>
+  <div id="ytbox"><div id="ytplayer"></div></div>
+
+  <script>
+  (function () {
+    // ===== DAFTAR LAGU =====
+    // Isi SALAH SATU per lagu:
+    //   file: "musik/nama.mp3"   -> file audio di folder musik/ (satu folder dengan index.html)
+    //   id:   "https://www.youtube.com/watch?v=xxxx" -> tempel link YouTube utuh (ID diambil otomatis)
+    // Lagu yang file/id-nya kosong atau gagal dimuat otomatis dilewati.
+    var LAGU = [
+      { judul: "Tokyo Revengers",   file: "musik/tokyo-revengers.mp3", id: "https://www.youtube.com/watch?v=F3YC4bdUoMY" },
+      { judul: "AOT Opening 1",     file: "musik/aot-opening-1.mp3", id: "https://www.youtube.com/watch?v=8OkpRK2_gVs" },
+      { judul: "AOT Season 2",      file: "musik/aot-season-2.mp3", id: "https://www.youtube.com/watch?v=CID-sYQNCew" },
+      { judul: "Asterisk - ORANGE RANGE",              file: "musik/asterisk.mp3",          id: "" },
+      { judul: "Ichirin no Hana - HIGH and MIGHTY COLOR", file: "musik/ichirin-no-hana.mp3", id: "" },
+      { judul: "Velonica - Aqua Timez",                file: "musik/velonica.mp3",          id: "" },
+      { judul: "Number One - Shiro Sagisu",            file: "musik/number-one.mp3",        id: "" },
+      { judul: "Never Meant to Belong - Shiro Sagisu", file: "musik/never-meant-to-belong.mp3", id: "" },
+      { judul: "Gurenge - LiSA",                       file: "musik/gurenge.mp3",           id: "" },
+      { judul: "Guren no Yumiya - Linked Horizon",     file: "musik/guren-no-yumiya.mp3",   id: "" },
+      { judul: "Kaikai Kitan - Eve",                   file: "musik/kaikai-kitan.mp3",      id: "" }
+    ];
+    var ACAK_URUTAN = false;   // true = urutan lagu diacak tiap buka web
+
+    var box = document.getElementById("musik"), elJudul = document.getElementById("mJudul");
+    var bPlay = document.getElementById("mPlay"), bMute = document.getElementById("mMute");
+    var audio = new Audio(); audio.preload = "auto"; audio.volume = 0.6;
+    var yt = null, ytSiap = false, ytMau = null;
+    var idx = 0, main = false, mulai = false, gagalBeruntun = 0, bisu = false;
+
+    if (ACAK_URUTAN) LAGU.sort(function () { return Math.random() - 0.5; });
+    // id boleh diisi link utuh (youtube.com/watch?v=..., youtu.be/..., /shorts/...) -> ID diambil otomatis
+    LAGU.forEach(function (l) {
+      var m = (l.id || "").match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([A-Za-z0-9_-]{11})/);
+      if (m) l.id = m[1];
+    });
+    LAGU = LAGU.filter(function (l) { return l.file || l.id; });
+    if (!LAGU.length) { box.style.display = "none"; return; }
+
+    function tampil() {
+      box.classList.toggle("diam", !main);
+      bPlay.innerHTML = main ? "&#9208;" : "&#9654;";
+      bMute.innerHTML = bisu ? "&#128263;" : "&#128266;";
+    }
+
+    function berhenti() {
+      try { audio.pause(); } catch (e) {}
+      if (ytSiap) { try { yt.stopVideo(); } catch (e) {} }
+    }
+
+    function muat(i) {
+      idx = (i + LAGU.length) % LAGU.length;
+      var l = LAGU[idx];
+      elJudul.textContent = l.judul;
+      berhenti();
+      if (l.id && (!l.file || l._yt)) {
+        if (ytSiap) { yt.loadVideoById(l.id); yt.setVolume(bisu ? 0 : 60); }
+        else { ytMau = l.id; siapkanYT(); }
+      } else {
+        audio.src = l.file; audio.muted = bisu;
+        var p = audio.play();
+        if (p && p.then) p.then(function () { main = true; tampil(); }).catch(function () { main = false; tampil(); });
+      }
+    }
+
+    function lanjut(arah) { muat(idx + (arah || 1)); }
+    function gagal(e) {
+      gagalBeruntun++;
+      var kode = e && e.data ? e.data : 0;
+      if (gagalBeruntun >= LAGU.length) {
+        main = false; tampil();
+        elJudul.textContent = location.protocol === "file:"
+          ? "Buka lewat https/GitHub Pages, jangan klik dua kali file (YouTube menolak)"
+          : "Semua video ditolak diputar di web lain (kode " + kode + "). Ganti link video lain";
+        box.classList.remove("sembunyi"); box.classList.remove("diam");
+        return;
+      }
+      lanjut(1);
+    }
+
+    audio.addEventListener("playing", function () { gagalBeruntun = 0; main = true; tampil(); });
+    audio.addEventListener("ended", function () { lanjut(1); });   // habis -> otomatis ganti lagu
+    audio.addEventListener("error", function () {
+      var l = LAGU[idx];
+      if (l && l.id && !l._yt) { l._yt = true; muat(idx); } else { gagal(); }   // file tidak ada -> coba YouTube
+    });
+
+    // ===== YouTube (hanya dimuat kalau ada lagu berisi id) =====
+    function siapkanYT() {
+      if (window.YT && window.YT.Player) { buatYT(); return; }
+      if (document.getElementById("ytapi")) return;
+      var t = document.createElement("script"); t.id = "ytapi"; t.src = "https://www.youtube.com/iframe_api";
+      document.head.appendChild(t);
+      window.onYouTubeIframeAPIReady = buatYT;
+    }
+    function buatYT() {
+      if (yt) return;
+      yt = new YT.Player("ytplayer", {
+        height: "200", width: "200", videoId: ytMau || "",
+        playerVars: { autoplay: 1, controls: 0, playsinline: 1 },
+        events: {
+          onReady: function () { ytSiap = true; yt.setVolume(bisu ? 0 : 60); if (ytMau) { yt.loadVideoById(ytMau); } },
+          onStateChange: function (e) {
+            if (e.data === 0) lanjut(1);                         // habis -> ganti
+            if (e.data === 1) { gagalBeruntun = 0; main = true; tampil(); singkirOtomatis(); }
+            if (e.data === 2) { main = false; tampil(); }
+          },
+          onError: function (e) { gagal(e); }
+        }
+      });
+    }
+
+    // ===== GESER / SEMBUNYIKAN KOTAK =====
+    var bTutup = document.getElementById("mTutup"), timerSingkir = null, sudahSingkir = false;
+    function geser(tutup) {
+      box.classList.toggle("sembunyi", tutup);
+      bTutup.innerHTML = tutup ? "&#9664;" : "&#9654;";
+    }
+    bTutup.onclick = function () { clearTimeout(timerSingkir); sudahSingkir = true; geser(!box.classList.contains("sembunyi")); };
+    function singkirOtomatis() {
+      if (sudahSingkir) return; sudahSingkir = true;
+      timerSingkir = setTimeout(function () { geser(true); }, 4000);   // 4 detik setelah lagu bunyi, kotak menyingkir
+    }
+    audio.addEventListener("playing", singkirOtomatis);
+
+    // ===== TOMBOL =====
+    bPlay.onclick = function () {
+      mulai = true;
+      if (main) { berhenti(); main = false; tampil(); } else { muat(idx); }
+    };
+    document.getElementById("mNext").onclick = function () { mulai = true; lanjut(1); };
+    document.getElementById("mPrev").onclick = function () { mulai = true; lanjut(-1); };
+    bMute.onclick = function () {
+      bisu = !bisu; audio.muted = bisu;
+      if (ytSiap) { bisu ? yt.mute() : yt.unMute(); }
+      tampil();
+    };
+
+    // ===== PUTAR OTOMATIS SAAT WEB DIBUKA =====
+    // Browser melarang suara otomatis sebelum ada interaksi, jadi:
+    // 1) coba langsung, 2) kalau diblokir, mulai begitu pengunjung klik/sentuh/tekan tombol pertama kali.
+    function mulaiPertama(e) {
+      if (mulai) return;
+      if (e && e.target && box.contains(e.target)) return;   // klik di tombol pemutar ditangani tombolnya sendiri
+      mulai = true;
+      ["pointerdown", "click", "keydown", "touchend"].forEach(function (n) { document.removeEventListener(n, mulaiPertama, true); });
+      muat(idx);
+    }
+    ["pointerdown", "click", "keydown", "touchend"].forEach(function (n) { document.addEventListener(n, mulaiPertama, true); });
+
+    var coba = LAGU[0].file ? (audio.src = LAGU[0].file, audio.play()) : null;
+    elJudul.textContent = LAGU[0].judul;
+    if (coba && coba.then) coba.then(function () { mulai = true; main = true; tampil(); }).catch(function () { /* menunggu interaksi pertama */ });
+    if (LAGU.some(function (l) { return l.id; })) siapkanYT();   // siapkan YouTube lebih awal supaya langsung bunyi saat diklik
+    tampil();
+  })();
   </script>
 </body>
 </html>
